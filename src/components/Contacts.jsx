@@ -10,6 +10,11 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
     changeChat(contact);
   };
 
+  const getAvatarUrl = (user) => {
+    if (!user || !user.avatarImage) return `https://api.dicebear.com/7.x/adventurer/svg?seed=default`;
+    return `https://api.dicebear.com/7.x/adventurer/svg?seed=${user.avatarImage}`;
+  };
+
   return (
     <>
       {currentUser && (
@@ -29,7 +34,7 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                 >
                   <div className="avatar">
                     <img
-                      src={`data:image/svg+xml;base64,${contact.avatarImage}`}
+                      src={getAvatarUrl(contact)}
                       alt="avatar"
                     />
                   </div>
@@ -43,7 +48,7 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
           <div className="current-user">
             <div className="avatar">
               <img
-                src={`data:image/svg+xml;base64,${currentUser.avatarImage}`}
+                src={getAvatarUrl(currentUser)}
                 alt="avatar"
               />
             </div>

@@ -21,8 +21,14 @@ export default function Chat() {
       if (!localStorage.getItem("chat-app-user")) {
         navigate("/login");
       } else {
-        setCurrentUser(await JSON.parse(localStorage.getItem("chat-app-user")));
-        setIsLoaded(true);
+        const user = await JSON.parse(localStorage.getItem("chat-app-user"));
+        // Ensure the user has an avatar set
+        if (!user.isAvatarImageSet) {
+          navigate("/setAvatar");
+        } else {
+          setCurrentUser(user);
+          setIsLoaded(true);
+        }
       }
     };
     setUser();
@@ -38,16 +44,12 @@ export default function Chat() {
   useEffect(() => {
     const fetchContacts = async () => {
       if (currentUser) {
-        if (currentUser.isAvatarImageSet) {
-          const { data } = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-          setContacts(data);
-        } else {
-          navigate("/setAvatar");
-        }
+        const { data } = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+        setContacts(data);
       }
     };
     fetchContacts();
-  }, [currentUser, navigate]);
+  }, [currentUser]);
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
